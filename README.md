@@ -99,3 +99,8 @@ CoC探索者アイスチャレンジ | 少 | 不要 | 不可 | 不可
 * tailwindcss-rails
 * dotenv-rails
 * sidekiq
+
+###### 本作は、「 株式会社アークライト 」及び「株式会社KADOKAWA」が権利を有する『クトゥルフ神話TRPG』の二次創作物です。  
+Call of Cthulhu is copyright ©1981, 2015, 2019 by Chaosium Inc. ;all rights reserved. Arranged by Arclight Inc.  
+Call of Cthulhu is a registered trademark of Chaosium Inc.  
+PUBLISHED BY KADOKAWA CORPORATION　「クトゥルフ神話TRPG」  
