@@ -104,7 +104,7 @@ CoC探索者アイスチャレンジ | 少 | 不要 | 不可 | 不可
 [画面遷移図URL](https://www.figma.com/design/l3QOXUzldralLJcojvEzDP/%E5%8D%92%E6%A5%AD%E5%88%B6%E4%BD%9C_BattleRoyaleSimulator_from_CoC?node-id=0-1&t=FfCVMv5xWglKogUp-1)
 
 ## ER図
-[ER図URL](https://i.gyazo.com/d2e7e6b1294f41f55fd6cc8d5c8e5e6d.png)
+[ER図URL](https://i.gyazo.com/0337fb86f2b9e54411295438b010cb5b.png)
 
 ## 使用する技術スタック  
 ###### フレームワーク
