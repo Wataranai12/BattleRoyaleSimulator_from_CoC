@@ -19,8 +19,8 @@ services: # コンテナの定義開始
     build: # Dockerイメージのビルド設定
       context: .  # ビルドコンテキストはカレントディレクトリ
       dockerfile: Dockerfile.dev # 開発用Dockerfileを使用
-    command: bash -c "bundle install && bundle exec rails db:prepare && rm -f tmp/pids/server.pid && ./bin/dev"
-    # ↑ サーバー起動時のコマンド：
+# 起動コマンドをシンプルにし、PID削除を優先
+    command: bash -c "rm -f tmp/pids/server.pid && ./bin/dev"    # ↑ サーバー起動時のコマンド：
     # - bundle install: 必要なgemをインストール
     # - rails db:prepare: DBの準備
     # - サーバープロセスIDファイルの削除
@@ -35,7 +35,7 @@ services: # コンテナの定義開始
     environment: # 環境変数の設定
       TZ: Asia/Tokyo # タイムゾーンを日本に設定
     ports: # ポート設定
-      - "3000:3000" # Rails標準のポート
+      - '3000:3000' # Rails標準のポート
     depends_on: # 依存関係の設定
       db: # dbサービスに依存
         condition: service_healthy # dbの健康チェックが通るまで待機
