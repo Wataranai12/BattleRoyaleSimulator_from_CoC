@@ -10,6 +10,18 @@
   </head>
 
   <body>
+    <!--ログイン状態の確認-->
+    <% if logged_in? %>
+      <p>ログイン中: <%= current_user.name %> さん</p>
+      <%= link_to "ログアウト", logout_path, data: { turbo_method: :delete } %>
+    <% else %>
+      <%= link_to "ユーザー登録", new_user_path %> |
+      <%= link_to "ログイン", login_path %>
+    <% end %>
+
+    <% flash.each do |message_type, message| %>
+      <div style="color: green;"><%= message %></div>
+    <% end %>
     <%= yield %>
   </body>
 </html>

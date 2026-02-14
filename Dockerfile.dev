@@ -8,6 +8,7 @@ ENV TZ Asia/Tokyo
 RUN apt-get update -qq && apt-get install -y \
     build-essential \
     libpq-dev \
+    libsass-dev \
     postgresql-client \
     vim
 

@@ -1,10 +1,15 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
+  # ユーザー登録用のルート
+  resources :users, only: [:new, :create]
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  # ログイン機能用のルート（後で使います）
+  get 'login', to: 'user_sessions#new', as: :login
+  post 'login', to: 'user_sessions#create'
+  delete 'logout', to: 'user_sessions#destroy', as: :logout
+
+  # トップページの設定（とりあえずユーザー登録画面に飛ばすか、専用のページを作る）
+  # ここでは一旦、登録画面をルートに設定してみます
+  root 'users#new'
+  #root 'static_pages#top'
 end
