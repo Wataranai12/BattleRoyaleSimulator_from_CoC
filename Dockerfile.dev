@@ -1,0 +1,37 @@
+# Ruby 3.2系が安定しているため推奨（3.4系は新しすぎてGemが対応していない場合があります）
+FROM ruby:3.2.2
+
+# 環境変数の設定
+ENV LANG C.UTF-8
+ENV TZ Asia/Tokyo
+
+RUN apt-get update -qq && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    libsass-dev \
+    postgresql-client \
+    vim
+
+# アプリケーションディレクトリの作成
+RUN mkdir /myapp
+WORKDIR /myapp
+
+# ホストのGemfileをコピー
+COPY Gemfile /myapp/Gemfile
+COPY Gemfile.lock /myapp/Gemfile.lock
+
+# Bundle installを実行
+RUN bundle install
+
+# プロジェクト全体をコピー
+COPY . /myapp
+
+# 起動用スクリプトの準備
+COPY entrypoint.sh /usr/bin/
+RUN chmod +x /usr/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
+
+EXPOSE 3000
+
+# サーバー起動
+CMD ["rails", "server", "-b", "0.0.0.0"]

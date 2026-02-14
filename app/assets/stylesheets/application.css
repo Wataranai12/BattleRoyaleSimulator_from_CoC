@@ -1,0 +1,74 @@
+/* 基本のボックスモデル設定 */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* メインコンテナをリキッド（流動的）に */
+main {
+  width: 95%;         /* スマホでは左右に少し隙間を開ける */
+  max-width: 600px;   /* PCで見ても広がりすぎないように制限 */
+  margin: 0 auto;     /* 中央寄せ */
+  padding: 20px 0;
+}
+
+/* フォーム要素をスマホで押しやすくする */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  width: 100%;        /* 親要素に対してフルサイズ */
+  padding: 12px;      /* タップしやすい高さ */
+  margin: 8px 0 20px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px; /* 角を丸く*/
+  font-size: 16px;    /* iPhoneでフォーカス時にズームされないサイズ */
+}
+
+/* ボタンを大きく押しやすく */
+button, .button, input[type="submit"] {
+  width: 100%;
+  padding: 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ヘッダーの調整 */
+header {
+  background: white;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ログアウトボタン用のスタイル */
+.btn-logout {
+  background-color: #e3342f; /* 赤色 */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* ホバー（指やマウスが乗った時）の色 */
+.btn-logout:hover {
+  background-color: #cc1f1a;
+}

@@ -107,24 +107,29 @@ CoC探索者アイスチャレンジ | 少 | 不要 | 不可 | 不可
 [ER図URL](https://i.gyazo.com/0337fb86f2b9e54411295438b010cb5b.png)
 
 ## 使用する技術スタック  
-###### フレームワーク
-* Ruby3.1以降
-  * YJIT
-* Ruby on Rails7以降
-  * Hotwire
-  * Importmaps
-* JavaScript
+#### フレームワーク
+* Ruby 3.2.2
+* Ruby on Rails 7.1
+  * Active Record: 探索者データ、武器、戦績統計のDB管理。
+  * Turbo Streams / Turbo Frames: リロードしない画面更新を実現するコア技術。
+  * Stimulus: ブラウザ上の動的な演出を担当する軽量JSフレームワーク。
+* Tailwind CSS: ユーティリティファーストなCSSフレームワーク。
+* Import Maps: Node.jsやnpmを介さず、ブラウザで直接JavaScriptモジュールを管理する仕組み。
+* Hotwire: サーバーサイドでHTMLを生成し、必要な部分だけを高速に差し替える設計思想。
 ###### データベース
-* PostgreSQL
-* Redis（場合に応じて追加）
+* PostgreSQL 14 / 16: 探索者ライブラリや戦績データを永続化するリレーショナルデータベース。
 ###### デプロイ先（Heroku / Renderなど）
 * Render.com
 * Docker
 ###### 使用予定のライブラリ
-* google-generative-ai
+* turbo-rails
+* stimulus-rails
+* importmap-rails
+* lucide-rails
 * tailwindcss-rails
-* dotenv-rails
-* sidekiq
+* dotenv-rails：Gemini APIキーなどの機密情報を環境変数として安全に管理します。
+* faraday：Gemini APIとの通信を行うための、HTTPクライアントライブラリ。
+* sorcery：ユーザー認証
 
 ###### 本作は、「 株式会社アークライト 」及び「株式会社KADOKAWA」が権利を有する『クトゥルフ神話TRPG』の二次創作物です。  
 ###### Call of Cthulhu is copyright ©1981, 2015, 2019 by Chaosium Inc. ;all rights reserved. Arranged by Arclight Inc.  

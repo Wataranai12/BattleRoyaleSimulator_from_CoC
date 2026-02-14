@@ -1,0 +1,27 @@
+<div style="padding: 20px 10px;">
+  <h1 style="text-align: center; margin-bottom: 30px;">ログイン</h1>
+
+  <%= form_with url: login_path, local: true do |f| %>
+    <div style="margin-bottom: 20px;">
+      <%= f.label :email, "メールアドレス", style: "display: block; margin-bottom: 8px; font-weight: bold;" %>
+      <%= f.email_field :email, placeholder: "example@mail.com", style: "width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px;" %>
+    </div>
+
+    <div style="margin-bottom: 25px;">
+      <%= f.label :password, "パスワード", style: "display: block; margin-bottom: 8px; font-weight: bold;" %>
+      <%= f.password_field :password, style: "width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px;" %>
+    </div>
+
+    <div>
+      <%# メインボタン：青色で大きく %>
+      <%= f.submit "ログイン", style: "width: 100%; padding: 14px; background-color: #007bff; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 18px; cursor: pointer;" %>
+    </div>
+  <% end %>
+
+  <div style="margin-top: 40px; text-align: center;">
+    <p style="color: #666; font-size: 14px; margin-bottom: 10px;">アカウントをお持ちでない方は</p>
+    <%# サブボタン：白背景に枠線、method: :get を指定してリンクとして動作させる %>
+    <%= button_to "新規登録はこちら", new_user_path, method: :get, 
+        style: "width: 100%; padding: 12px; background-color: white; color: #007bff; border: 2px solid #007bff; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer;" %>
+  </div>
+</div>

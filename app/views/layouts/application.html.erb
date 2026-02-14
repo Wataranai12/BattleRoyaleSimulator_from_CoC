@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>BattleRoyaleSimulator</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  </head>
+
+  <body>
+    <%= render 'shared/header' %>
+
+    <main style="max-width: 800px; margin: 0 auto; padding: 0 10px;">
+      <%= yield %>
+    </main>
+  </body>
+</html>

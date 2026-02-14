@@ -1,0 +1,14 @@
+<header>
+  <div class="logo">
+    <%= link_to "BR Simulator", root_path, style: "font-weight: bold; text-decoration: none; color: #007bff;" %>
+  </div>
+  
+  <nav style="font-size: 14px;">
+    <% if logged_in? %>
+      <span style="margin-right: 5px;"><%= current_user.name %></span>
+      <%= button_to "ログアウト", logout_path, method: :delete, class: "btn-logout" %>
+    <% else %>
+      <%= button_to "ログイン", login_path %>
+    <% end %>
+  </nav>
+</header>
