@@ -1,23 +1,38 @@
 <h1>ユーザー登録</h1>
 
 <%= form_with model: @user, local: true do |f| %>
-  <div>
+  <% if @user.errors.any? %>
+    <div style="color: red;">
+      <h2>入力内容にエラーがあります</h2>
+      <ul>
+        <% @user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div style="margin-bottom: 15px;">
     <%= f.label :name, "ユーザー名" %><br>
-    <%= f.text_field :name %>
+    <%= f.text_field :name, style: "width: 100%; max-width: 300px;" %>
   </div>
-  <div>
+
+  <div style="margin-bottom: 15px;">
     <%= f.label :email, "メールアドレス" %><br>
-    <%= f.email_field :email %>
+    <%= f.email_field :email, style: "width: 100%; max-width: 300px;" %>
   </div>
-  <div>
+
+  <div style="margin-bottom: 15px;">
     <%= f.label :password, "パスワード" %><br>
-    <%= f.password_field :password %>
+    <%= f.password_field :password, style: "width: 100%; max-width: 300px;" %>
   </div>
-  <div>
+
+  <div style="margin-bottom: 15px;">
     <%= f.label :password_confirmation, "パスワード（確認用）" %><br>
-    <%= f.password_field :password_confirmation %>
+    <%= f.password_field :password_confirmation, style: "width: 100%; max-width: 300px;" %>
   </div>
+
   <div>
-    <%= f.submit "登録" %>
+    <%= f.submit "登録", style: "padding: 5px 20px; cursor: pointer;" %>
   </div>
 <% end %>

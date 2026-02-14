@@ -1,2 +1,18 @@
-<header>
+<header style="padding: 10px; border-bottom: 1px solid #ccc; margin-bottom: 20px;">
+  <nav>
+    <strong><%= link_to "BR Simulator", root_path, style: "text-decoration: none; color: black;" %></strong> |
+    <% if logged_in? %>
+      <span>ログイン中: <%= current_user.name %></span> |
+      <%= button_to "ログアウト", logout_path, method: :delete %>
+    <% else %>
+      <%= link_to "ユーザー登録", new_user_path %> |
+      <%= link_to "ログイン", login_path %>
+    <% end %>
+  </nav>
+
+  <% flash.each do |message_type, message| %>
+    <div style="color: <%= message_type == 'notice' ? 'green' : 'red' %>; margin-top: 10px;">
+      <%= message %>
+    </div>
+  <% end %>
 </header>
