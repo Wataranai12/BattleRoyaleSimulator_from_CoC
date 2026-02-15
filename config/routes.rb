@@ -8,7 +8,5 @@ Rails.application.routes.draw do
   post 'login', to: 'user_sessions#create'
   delete 'logout', to: 'user_sessions#destroy', as: :logout
 
-  # トップページの設定（とりあえずユーザー登録画面に飛ばすか、専用のページを作る）
-  root 'users#new'
-  #root 'static_pages#top'
+  root 'static_pages#top'
 end
