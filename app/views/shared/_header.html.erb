@@ -1,14 +1,19 @@
-<header>
-  <div class="logo">
-    <%= link_to "BR Simulator", root_path, style: "font-weight: bold; text-decoration: none; color: #007bff;" %>
+<header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+  <%# justify-content-between を追加して、子要素を両端に配置する %>
+  <div class="container-fluid px-3 d-flex justify-content-between">
+    
+    <%# 1. ロゴ（左側に残る） %>
+    <%= link_to "BR Simulator", root_path, class: "navbar-brand fw-bold text-primary" %>
+
+    <%# 2. ナビゲーション（これで右に寄る） %>
+    <nav class="d-flex align-items-center">
+      <% if logged_in? %>
+        <span class="me-2 small text-secondary"><%= current_user.name %></span>
+        <%= button_to "ログアウト", logout_path, method: :delete, class: "btn btn-outline-danger btn-sm" %>
+      <% else %>
+        <%= link_to "ログイン", login_path, class: "btn btn-primary btn-sm" %>
+      <% end %>
+    </nav>
+
   </div>
-  
-  <nav style="font-size: 14px;">
-    <% if logged_in? %>
-      <span style="margin-right: 5px;"><%= current_user.name %></span>
-      <%= button_to "ログアウト", logout_path, method: :delete, class: "btn-logout" %>
-    <% else %>
-      <%= button_to "ログイン", login_path %>
-    <% end %>
-  </nav>
 </header>

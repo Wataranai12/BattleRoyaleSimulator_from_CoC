@@ -1,5 +1,29 @@
-<div class="top-wrapper">
-  <div class="top-inner-text">
-    <h1>xxxxxx</h1>
+<div class="container-fluid d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+  <div class="text-center px-3">
+    
+    <h1 class="display-4 fw-bold text-primary mb-3">
+      Battle Royale Simulator <br class="d-md-none"> <span class="text-dark">from_CoC</span>
+    </h1>
+
+    <div class="mt-5 text-muted small">
+      <p class="mb-1">「クトゥルフ神話TRPG(6版)」のルールに則った戦闘シミュレーターです。</p>
+      <p>作成した探索者データを読み込むか、<br class="d-md-none">サンプルキャラクターを使ってバトルしよう！</p>
+    </div>
+
+    <%# アクションエリア：ログイン状態で出し分け %>
+    <div class="d-grid gap-3 col-lg-6 mx-auto">
+      <% if logged_in? %>
+        <%= link_to "探索者で遊ぶ！", "#", class: "btn btn-success btn-lg shadow-sm py-3 fw-bold" %>
+        <%= link_to "サンプルキャラで試す", "#", class: "btn btn-outline-secondary" %>
+        <%= link_to "遊びかた", "#", class: "btn btn-outline-secondary" %>
+      <% else %>
+        <%= link_to "My探索者で遊ぶ（新規登録）", new_user_path, class: "btn btn-primary btn-lg shadow-sm py-3 fw-bold" %>
+        <%= link_to "サンプルキャラで試す", "#", class: "btn btn-outline-secondary" %>
+        <%= link_to "遊びかた", "#", class: "btn btn-outline-secondary" %>
+        <p class="small mt-2">
+          すでにアカウントをお持ちの方は <%= link_to "ログイン", login_path, class: "text-decoration-none" %>
+        </p>
+      <% end %>
+    </div>
   </div>
 </div>

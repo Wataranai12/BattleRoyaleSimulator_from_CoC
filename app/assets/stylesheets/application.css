@@ -11,11 +11,10 @@ body {
   line-height: 1.6;
 }
 
-/* メインコンテナをリキッド（流動的）に */
 main {
-  width: 95%;         /* スマホでは左右に少し隙間を開ける */
-  max-width: 600px;   /* PCで見ても広がりすぎないように制限 */
-  margin: 0 auto;     /* 中央寄せ */
+  width: 95%;
+  max-width: 600px;
+  margin: 0 auto;
   padding: 20px 0;
 }
 
@@ -25,15 +24,14 @@ input[type="email"],
 input[type="password"],
 select,
 textarea {
-  width: 100%;        /* 親要素に対してフルサイズ */
-  padding: 12px;      /* タップしやすい高さ */
+  width: 100%;
+  padding: 12px;
   margin: 8px 0 20px 0;
   border: 1px solid #ccc;
-  border-radius: 8px; /* 角を丸く*/
-  font-size: 16px;    /* iPhoneでフォーカス時にズームされないサイズ */
+  border-radius: 8px;
+  font-size: 16px;
 }
 
-/* ボタンを大きく押しやすく */
 button, .button, input[type="submit"] {
   width: 100%;
   padding: 14px;
@@ -47,7 +45,6 @@ button, .button, input[type="submit"] {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* ヘッダーの調整 */
 header {
   background: white;
   padding: 15px;
@@ -57,9 +54,8 @@ header {
   align-items: center;
 }
 
-/* ログアウトボタン用のスタイル */
 .btn-logout {
-  background-color: #e3342f; /* 赤色 */
+  background-color: #e3342f;
   color: white;
   border: none;
   padding: 8px 16px;
