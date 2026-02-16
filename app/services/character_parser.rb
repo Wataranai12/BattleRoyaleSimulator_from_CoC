@@ -59,11 +59,11 @@ class CharacterParser
   # 技能名からER図のcategoryを判定
   def determine_category(name)
     case name
-    when /回避/ then 'dodge'
-    when /キック|こぶし|頭突き|ナイフ|拳銃/ then 'attack'
-    when /マーシャルアーツ/ then 'martialarts'
-    when /組み付き/ then 'grapple'
-    else 'other'
+    when /回避/ then :dodge
+    when /キック|こぶし|頭突き|ナイフ|拳銃|投擲/ then :attack
+    when /マーシャルアーツ/ then :martialarts
+    when /組み付き/ then :grapple
+    else :other
     end
   end
 end

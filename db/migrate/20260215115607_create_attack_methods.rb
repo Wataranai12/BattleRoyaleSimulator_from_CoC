@@ -8,7 +8,18 @@ class CreateAttackMethods < ActiveRecord::Migration[7.1]
       t.string :base_damage
       t.boolean :can_apply_db
       t.boolean :can_apply_ma
-
+# 状態異常用のカラムを直接追加
+      t.integer :condition_type
+      t.integer :duration
+      t.integer :effect_value
+      # 状態異常の種類を定義
+      enum condition_type: {
+        grappling: 0,
+        grappled: 1,
+        stunned: 2,
+        poisoned: 3,
+        shocked: 4
+      }
       t.timestamps
     end
   end

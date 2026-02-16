@@ -3,5 +3,11 @@ class Skill < ApplicationRecord
   has_many :attack_methods, dependent: :destroy
   validates :name, presence: true
   validates :success, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 99 }
-  validates :category, presence: true, inclusion: { in: %w(attack dodge martialarts grapple other) }
+  enum category: {
+    other: 0,
+    dodge: 1,
+    attack: 2,
+    martialarts: 3,
+    grapple: 4
+  }
 end
