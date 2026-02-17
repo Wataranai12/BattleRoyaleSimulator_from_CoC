@@ -1,0 +1,22 @@
+AllCops:
+  NewCops: enable #バージョンアップによる追加ルール適用
+  Exclude:
+    - 'db/schema.rb'
+    - 'bin/**/*'
+
+Style/Documentation: #クラスの上にコメント書く
+  Enabled: false
+
+Metrics/MethodLength: #メソッドが長い
+  Enabled: false
+
+Metrics/AbcSize: #代入・分岐・条件が複雑
+  Enabled: false
+
+Metrics/CyclomaticComplexity: #分岐が多い
+  Enabled: false
+
+Metrics/BlockLength: #ブロックが長い　一部除外
+  Exclude:
+    - 'config/environments/*'
+    - 'db/schema.rb'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CharacterParser
   def initialize(text)
     @text = text
@@ -27,10 +29,10 @@ class CharacterParser
   # 能力値（STR, CON...）を抽出
   def extract_characteristics
     stats = []
-    %w(STR CON POW DEX APP SIZ INT EDU).each do |s|
+    %w[STR CON POW DEX APP SIZ INT EDU].each do |s|
       # 数値が並んでいる行から、2番目の「能力値」の数字を取得
       pattern = /#{s}\s+(\d+)\s+(\d+)/
-      if match = @text.match(pattern)
+      if (match = @text.match(pattern))
         stats << { name: s.downcase, value: match[2].to_i }
       end
     end
@@ -43,15 +45,15 @@ class CharacterParser
     # 各行をループし、合計値（数字）が含まれる行を探す
     @text.each_line do |line|
       # 例: 「回避   89   34 ...」という並びから技能名と合計値を抽出
-      if match = line.match(/^([^\s　]+)\s+(\d+)\s+(\d+)/)
-        name = match[1]
-        next if %w(技能名 職業ポイント 興味ポイント).include?(name) # ヘッダー除外
-        
-        success_rate = match[2].to_i
-        category = determine_category(name)
-        
-        skills << { name: name, success: success_rate, category: category }
-      end
+      next unless (match = line.match(/^([^\s　]+)\s+(\d+)\s+(\d+)/))
+
+      name = match[1]
+      next if %w[技能名 職業ポイント 興味ポイント].include?(name) # ヘッダー除外
+
+      success_rate = match[2].to_i
+      category = determine_category(name)
+
+      skills << { name: name, success: success_rate, category: category }
     end
     skills
   end

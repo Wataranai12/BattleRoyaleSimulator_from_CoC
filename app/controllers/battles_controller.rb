@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 class BattlesController < ApplicationController
   # ログイン制限をスキップする設定
-  skip_before_action :require_login, only: [:new, :create, :show], raise: false
+  skip_before_action :require_login, only: %i[new create show], raise: false
 
   def new
     @battle = Battle.new
-    if logged_in?
-      @my_characters = current_user.characters
-    else
-      @my_characters = []
-    end
+    @my_characters = if logged_in?
+                       current_user.characters
+                     else
+                       []
+                     end
     @sample_characters = Character.where(user_id: nil)
   end
 

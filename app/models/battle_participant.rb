@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BattleParticipant < ApplicationRecord
   belongs_to :character
   belongs_to :battle

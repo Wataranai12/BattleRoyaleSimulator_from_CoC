@@ -1,16 +1,17 @@
+# frozen_string_literal: true
+
 class AttackMethod < ApplicationRecord
   belongs_to :character
   belongs_to :skill
-  def calculate_effect_value(participant)
-    case condition_type
-    when "grappling", "grappled"
-      # 組み付きの場合、攻撃側のSTRを返す
-      participant.character.characteristics.find_by(name: "str")&.value
-    when "poisoned"
-      # 毒の場合は保存されている固定値を返す
-      self.effect_value
-    else
-      0
-    end
-  end
+  validates :show_name, :weapon_name, :base_damage, presence: true
+  validates :base_damage, format: { with: /\A\d+d\d+(\+\d+d\d+)?(\+DB)?\z/i }
+
+  # 状態異常の定義
+  enum condition_type: {
+    grappling: 0,
+    grappled: 1,
+    stunned: 2,
+    poisoned: 3,
+    shocked: 4
+  }
 end

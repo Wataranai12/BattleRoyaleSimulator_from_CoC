@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CharactersController < ApplicationController
   before_action :require_login
 
@@ -5,7 +7,7 @@ class CharactersController < ApplicationController
     if params[:sample_id].present?
       # --- パターン3: サンプルからのコピー ---
       sample = Character.find(params[:sample_id])
-      
+
       # キャラクター基本情報の複製
       @character = current_user.characters.build(
         name: sample.name,
@@ -28,9 +30,7 @@ class CharactersController < ApplicationController
     else
       # --- パターン1 & 2: テキスト解析 ---
       txt = params[:character][:original_txt]
-      if params[:character][:file].present?
-        txt = params[:character][:file].read.force_encoding("UTF-8")
-      end
+      txt = params[:character][:file].read.force_encoding('UTF-8') if params[:character][:file].present?
 
       parser = CharacterParser.new(txt)
       parsed_data = parser.parse
@@ -55,12 +55,16 @@ class CharactersController < ApplicationController
   def copy_character_for_user(sample, user)
     new_char = sample.dup
     new_char.user_id = user.id
-    new_char.name = "#{sample.name}" # 必要なら "(コピー)" 等を付与
-    
+    new_char.name = sample.name.to_s # 必要なら "(コピー)" 等を付与
+
     # save前に子要素をビルドしておくことで、まとめて保存される
-    sample.characteristics.each { |c| new_char.characteristics.build(c.attributes.except("id", "character_id", "created_at", "updated_at")) }
-    sample.skills.each { |s| new_char.skills.build(s.attributes.except("id", "character_id", "created_at", "updated_at")) }
-    
+    sample.characteristics.each do |c|
+      new_char.characteristics.build(c.attributes.except('id', 'character_id', 'created_at', 'updated_at'))
+    end
+    sample.skills.each do |s|
+      new_char.skills.build(s.attributes.except('id', 'character_id', 'created_at', 'updated_at'))
+    end
+
     # AttackMethods は skill_id との紐付けが複雑になるため、保存後に処理するのが安全ですが
     # ここでは一旦シンプルに基本情報のみコピーし、後で調整も可能です
     new_char

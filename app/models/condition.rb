@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Condition < ApplicationRecord
   belongs_to :battle_participant
   # 状態の付与者を「origin」として参照できるようにする
