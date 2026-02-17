@@ -16,8 +16,9 @@ class CharactersController < ApplicationController
       # キャラクター基本情報の複製
       @character = current_user.characters.build(
         name: sample.name,
+        original_txt: sample.original_txt,
         damage_bonus: sample.damage_bonus,
-        original_txt: "Sample copied: #{sample.name}"
+        max_hp: sample.max_hp
       )
 
       # 関連データのビルド（この時点ではメモリ上）

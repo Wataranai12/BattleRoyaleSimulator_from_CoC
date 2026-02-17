@@ -6,12 +6,13 @@ class BattlesController < ApplicationController
 
   def new
     @battle = Battle.new
-    @my_characters = if logged_in?
-                       current_user.characters
-                     else
-                       []
-                     end
-    @sample_characters = Character.where(user_id: nil)
+    @my_characters =
+      if logged_in?
+        current_user.characters
+      else
+        []
+      end
+    @sample_characters = Character.where(is_sample: true)
   end
 
   def create
