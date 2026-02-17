@@ -48,9 +48,14 @@ class CharactersController < ApplicationController
 
     # ここでまとめて保存（トランザクション的に一気に保存されます）
     if @character.save
+        if params[:slot].present?
+          session[:battle_slots] ||= []
+          slot_index = params[:slot].to_i
+          session[:battle_slots][slot_index] = @character.id
+        end
       redirect_to new_battle_path, notice: notice_msg
     else
-      @sample_characters = Character.where(user_id: nil)
+      @sample_characters = Character.where(is_sample: true)
       render :new, status: :unprocessable_entity
     end
   end
