@@ -39,6 +39,7 @@ class Character < ApplicationRecord
       '+1d6'
     end
   end
+
   # 能力値の生の値を取得
   def get_characteristic(name)
     characteristics.find_by(name: name.to_s.downcase)&.value || 0
@@ -50,16 +51,24 @@ class Character < ApplicationRecord
   end
 
   # 便利メソッド群
-  def str; get_characteristic('str'); end
-  def dex; get_characteristic('dex'); end
-  def con; get_characteristic('con'); end
-  def pow; get_characteristic('pow'); end
-  def siz; get_characteristic('siz'); end
-  def int; get_characteristic('int'); end
-  def edu; get_characteristic('edu'); end
+  def str = get_characteristic('str')
+  def dex = get_characteristic('dex')
+  def con = get_characteristic('con')
+  def pow = get_characteristic('pow')
+  def siz = get_characteristic('siz')
+  def int = get_characteristic('int')
+  def edu = get_characteristic('edu')
 
   # 6版の特殊計算
-  def idea;      (int * 5); end
-  def knowledge; (edu * 5); end
-  def luck;      (pow * 5); end
+  def idea
+    (int * 5)
+  end
+
+  def knowledge
+    (edu * 5)
+  end
+
+  def luck
+    (pow * 5)
+  end
 end
