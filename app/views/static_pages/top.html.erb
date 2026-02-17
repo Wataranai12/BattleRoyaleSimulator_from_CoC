@@ -13,12 +13,12 @@
     <%# アクションエリア：ログイン状態で出し分け %>
     <div class="d-grid gap-3 col-lg-6 mx-auto">
       <% if logged_in? %>
-        <%= link_to "探索者で遊ぶ！", "#", class: "btn btn-success btn-lg shadow-sm py-3 fw-bold" %>
-        <%= link_to "サンプルキャラで試す", "#", class: "btn btn-outline-secondary" %>
+        <%= link_to "My探索者で遊ぶ", new_battle_path, class: "btn btn-success btn-lg shadow-sm py-3 fw-bold" %>
+        <%= link_to "サンプルキャラで試す", new_battle_path(mode: :sample), class: "btn btn-outline-secondary" %>
         <%= link_to "遊びかた", "#", class: "btn btn-outline-secondary" %>
       <% else %>
         <%= link_to "My探索者で遊ぶ（新規登録）", new_user_path, class: "btn btn-primary btn-lg shadow-sm py-3 fw-bold" %>
-        <%= link_to "サンプルキャラで試す", "#", class: "btn btn-outline-secondary" %>
+        <%= link_to "サンプルキャラで試す", new_battle_path(mode: :sample), class: "btn btn-outline-secondary" %>
         <%= link_to "遊びかた", "#", class: "btn btn-outline-secondary" %>
         <p class="small mt-2">
           すでにアカウントをお持ちの方は <%= link_to "ログイン", login_path, class: "text-decoration-none" %>

@@ -1,46 +1,43 @@
-services: # コンテナの定義開始
-  db: # PostgreSQLデータベースの設定
-    image: postgres # PostgreSQLの公式イメージを使用
-    restart: always # コンテナを常に再起動
-    environment: # 環境変数の設定
-      TZ: Asia/Tokyo # タイムゾーンを日本に設定
-      POSTGRES_PASSWORD: password # データベースのパスワード設定
-    volumes: # データの永続化設定
-      - postgresql_data:/var/lib/postgresql # DBデータを永続化
-    ports: # ポート設定
+services:
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      TZ: Asia/Tokyo
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: myapp_development # 初期作成DBを指定
+    volumes:
+      - postgresql_data:/var/lib/postgresql
+    ports:
       - 5432:5432
-    healthcheck: # コンテナの健康チェック設定
+    healthcheck:
       test: ["CMD-SHELL", "pg_isready -d myapp_development -U postgres"]
-      interval: 10s # チェック間隔
-      timeout: 5s # タイムアウト時間
-      retries: 5 # リトライ回数
-      
-  web: # Railsアプリケーションの設定
-    build: # Dockerイメージのビルド設定
-      context: .  # ビルドコンテキストはカレントディレクトリ
-      dockerfile: Dockerfile.dev # 開発用Dockerfileを使用
-# 起動コマンドをシンプルにし、PID削除を優先
-    command: bash -c "rm -f tmp/pids/server.pid && ./bin/dev"    # ↑ サーバー起動時のコマンド：
-    # - bundle install: 必要なgemをインストール
-    # - rails db:prepare: DBの準備
-    # - サーバープロセスIDファイルの削除
-    # - 開発サーバーの起動
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-    tty: true # 疑似ターミナルを割り当て
-    stdin_open: true # 標準入力を保持
-    volumes:  # ボリュームマウントの設定
-      - .:/myapp # ソースコードのマウント
-      - bundle_data:/usr/local/bundle:cached # gemの永続化
-      - node_modules:/myapp/node_modules # node_modulesの永続化
-    environment: # 環境変数の設定
-      TZ: Asia/Tokyo # タイムゾーンを日本に設定
-    ports: # ポート設定
-      - '3000:3000' # Rails標準のポート
-    depends_on: # 依存関係の設定
-      db: # dbサービスに依存
-        condition: service_healthy # dbの健康チェックが通るまで待機
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: ./bin/dev
+    tty: true
+    stdin_open: true
+    volumes:
+      - .:/myapp
+      - bundle_data:/usr/local/bundle:cached
+      - node_modules:/myapp/node_modules
+    environment:
+      TZ: Asia/Tokyo
+      POSTGRES_HOST: db
+      POSTGRES_PASSWORD: password
+    ports:
+      - '3000:3000'
+    depends_on:
+      db:
+        condition: service_healthy
 
-volumes: # ボリュームの定義
-  bundle_data: # gemデータの永続化用ボリューム
-  postgresql_data: # PostgreSQLデータの永続化用ボリューム
-  node_modules: # Node.jsパッケージの永続化用ボリューム
+volumes:
+  bundle_data:
+  postgresql_data:
+  node_modules:

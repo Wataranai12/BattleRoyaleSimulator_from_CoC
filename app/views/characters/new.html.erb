@@ -1,0 +1,68 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+      <h2 class="text-center mb-4">探索者の登録</h2>
+
+      <%# タブの切り替え部分 %>
+      <ul class="nav nav-pills nav-fill mb-4 shadow-sm p-1 bg-light rounded" id="charTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="paste-tab" data-bs-toggle="tab" data-bs-target="#paste" type="button" role="tab">テキスト貼り付け</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button" role="tab">ファイル選択</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="sample-tab" data-bs-toggle="tab" data-bs-target="#sample" type="button" role="tab">サンプルから選ぶ</button>
+        </li>
+      </ul>
+
+      <div class="tab-content border p-4 bg-white rounded shadow-sm" id="charTabContent">
+        
+        <%# パターン1: 貼り付け %>
+        <div class="tab-pane fade show active" id="paste" role="tabpanel">
+          <%= form_with model: @character, local: true do |f| %>
+            <div class="mb-3">
+              <%= f.label :original_txt, "txtデータをここに貼り付けてください", class: "form-label fw-bold" %>
+              <%= f.text_area :original_txt, rows: 10, class: "form-control", placeholder: "【探索者名】\nSTR: 12..." %>
+            </div>
+            <div class="d-grid"><%= f.submit "解析して登録", class: "btn btn-primary" %></div>
+          <% end %>
+        </div>
+
+        <%# パターン2: アップロード %>
+        <div class="tab-pane fade" id="upload" role="tabpanel">
+          <%= form_with model: @character, local: true do |f| %>
+            <div class="mb-3">
+              <%= f.label :file, "txtファイルを選択", class: "form-label fw-bold" %>
+              <%= f.file_field :file, class: "form-control", accept: ".txt" %>
+            </div>
+            <div class="d-grid"><%= f.submit "ファイルをアップロード", class: "btn btn-primary" %></div>
+          <% end %>
+        </div>
+
+        <%# パターン3: サンプル選択 %>
+        <div class="tab-pane fade" id="sample" role="tabpanel">
+          <p class="text-muted small">公式サンプルやプリセットキャラを使用して、すぐにバトルを開始できます。</p>
+          <div class="row row-cols-1 row-cols-md-2 g-3">
+          <% @sample_characters.each do |char| %>
+            <div class="col">
+              <div class="card h-100 shadow-sm border-primary-subtle">
+                <div class="card-body">
+                  <h5 class="card-title fw-bold"><%= char.name %></h5>
+                  <%# ... ステータス表示 ... %>
+                  
+                  <%= button_to "このキャラを登録", characters_path, 
+                      method: :post,
+                      params: { sample_id: char.id }, 
+                      class: "btn btn-sm btn-primary w-100" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
