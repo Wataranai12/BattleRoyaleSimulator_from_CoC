@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-# 既存のサンプルデータを削除（再実行できるように）
+# 依存関係の深い（子供の）データから順番に削除する
+DefaultCondition.destroy_all
+AttackMethod.destroy_all
+Skill.destroy_all
+Characteristic.destroy_all
 Character.where(is_sample: true).destroy_all
 
 # enum定義（モデルに合わせること）
@@ -155,12 +159,11 @@ samples.each do |data|
     next unless condition_data
 
     attack_method.create_default_condition!(condition_data)
-    # ※ モデルにこのメソッドがない場合は下記のように直接書く
-    # DefaultCondition.create!(
-    #   attack_method: attack_method,
-    #   condition_type: condition_data[:condition_type],
-    #   duration:       condition_data[:duration],
-    #   effect_value:   condition_data[:effect_value]
-    # )
+     DefaultCondition.create!(
+       attack_method: attack_method,
+       condition_type: condition_data[:condition_type],
+       duration:       condition_data[:duration],
+       effect_value:   condition_data[:effect_value]
+     )
   end
 end

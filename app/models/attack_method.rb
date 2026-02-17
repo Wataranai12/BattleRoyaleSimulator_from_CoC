@@ -3,8 +3,9 @@
 class AttackMethod < ApplicationRecord
   belongs_to :character
   belongs_to :skill
+  has_one :default_condition, dependent: :destroy
   validates :show_name, :weapon_name, :base_damage, presence: true
-  validates :base_damage, format: { with: /\A\d+d\d+(\+\d+d\d+)?(\+DB)?\z/i }
+  validates :base_damage, presence: true, format: { with: /\A(\d+|(\d+d\d+([+-]\d+)?))\z/ }
 
   # 状態異常の定義
   enum condition_type: {

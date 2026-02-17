@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_02_15_115654) do
+ActiveRecord::Schema[7.1].define(version: 2026_02_17_081157) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -88,7 +88,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_15_115654) do
   end
 
   create_table "characters", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.string "name", null: false
     t.string "damage_bonus"
     t.integer "max_hp"
@@ -109,6 +109,16 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_15_115654) do
     t.datetime "updated_at", null: false
     t.index ["battle_participant_id"], name: "index_conditions_on_battle_participant_id"
     t.index ["origin_participant_id"], name: "index_conditions_on_origin_participant_id"
+  end
+
+  create_table "default_conditions", force: :cascade do |t|
+    t.bigint "attack_method_id", null: false
+    t.integer "condition_type"
+    t.integer "duration"
+    t.integer "effect_value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["attack_method_id"], name: "index_default_conditions_on_attack_method_id"
   end
 
   create_table "skills", force: :cascade do |t|
@@ -154,6 +164,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_15_115654) do
   add_foreign_key "characteristics", "characters"
   add_foreign_key "characters", "users"
   add_foreign_key "conditions", "battle_participants"
+  add_foreign_key "default_conditions", "attack_methods"
   add_foreign_key "skills", "characters"
   add_foreign_key "teams", "battles"
 end

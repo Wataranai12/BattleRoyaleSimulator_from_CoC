@@ -3,6 +3,11 @@
 class CharactersController < ApplicationController
   before_action :require_login
 
+  def new
+    @character = Character.new
+    @sample_characters = Character.where(is_sample: true)
+  end
+
   def create
     if params[:sample_id].present?
       # --- パターン3: サンプルからのコピー ---
