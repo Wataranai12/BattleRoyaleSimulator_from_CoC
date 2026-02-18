@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
-# 依存関係の深い（子供の）データから順番に削除する
 DefaultCondition.destroy_all
 AttackMethod.destroy_all
 Skill.destroy_all
 Characteristic.destroy_all
-Character.where(is_sample: true).destroy_all
-
+Character.destroy_all
+Battle.destroy_all
+BattleParticipant.destroy_all
+BattleLog.destroy_all
+Condition.destroy_all
 # enum定義（モデルに合わせること）
 # Skill category: other: 0, dodge: 1, attack: 2, martialarts: 3, grapple: 4
 # AttackMethod condition_type: grappling: 0, grappled: 1, stunned: 2, poisoned: 3, shocked: 4
@@ -80,7 +82,7 @@ samples = [
         can_apply_db: false,
         can_apply_ma: false,
         skill_name: '投擲',
-        inflicts_condition: { condition_type: 3, duration: 1, effect_value: 10 }
+        inflicts_condition: { condition_type: :poisoned, duration: 1, effect_value: 10 }
       }
     ]
   },
@@ -110,7 +112,7 @@ samples = [
         can_apply_db: false,
         can_apply_ma: false,
         skill_name: '組み付き',
-        inflicts_condition: { condition_type: 0, duration: 1, effect_value: nil }
+        inflicts_condition: { condition_type: :grappling, duration: 1, effect_value: nil }
       }
     ]
   }
@@ -169,13 +171,13 @@ samples.each do |data|
     )
 
     # 状態異常付与設定がある場合は DefaultCondition を作成
-    if condition_data
-      attack_method.create_default_condition!(
-        condition_type: condition_data[:condition_type],
-        duration: condition_data[:duration],
-        effect_value: condition_data[:effect_value]
-      )
-    end
+    next unless condition_data
+
+    attack_method.create_default_condition!(
+      condition_type: condition_data[:condition_type],
+      duration: condition_data[:duration],
+      effect_value: condition_data[:effect_value]
+    )
   end
 
   puts "Created sample character: #{char.name}"

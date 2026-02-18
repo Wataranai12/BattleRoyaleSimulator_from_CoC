@@ -9,7 +9,7 @@ Rails.application.routes.draw do
       delete :remove_slot
       patch  :update_team
     end
-    
+
     member do
       post :execute_turn
       post :end_battle

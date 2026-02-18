@@ -7,11 +7,10 @@ class AttackMethod < ApplicationRecord
 
   validates :show_name, :weapon_name, :base_damage, presence: true
 
-  # ✅ 複合ダメージ式に対応
-  # OK: 1d6 / 1d4+2 / 1d4+1d4 / 1d4+2+1d4 / 0 / 特殊
+  # ダメージ式のバリデーション（複合ダメージ式対応）
   validates :base_damage, format: {
-    with: /\A(0|特殊|((\d+d\d+|\d+)([+-](\d+d\d+|\d+))*))\z/i,
-    message: 'は有効なダメージ式ではありません（例: 1d6, 1d4+2, 1d4+1d4, 0）'
+    with: /\A(\d+d\d+|[+-]?\d+)(\s*[+-]\s*(\d+d\d+|\d+))*\z/,
+    message: 'は正しいダイス式である必要があります（例: 1d6+2, 1d4+1d4）'
   }
 
   enum condition_type: {

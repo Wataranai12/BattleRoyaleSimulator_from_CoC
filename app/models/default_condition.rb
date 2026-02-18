@@ -8,6 +8,9 @@ class DefaultCondition < ApplicationRecord
     grappled: 1,
     stunned: 2,
     poisoned: 3,
-    shocked: 4
+    shocked: 4,
+    nerf: 5
   }
+
+  validates :duration, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 end
