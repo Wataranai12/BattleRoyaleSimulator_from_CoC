@@ -5,9 +5,9 @@ class Skill < ApplicationRecord
   has_many :attack_methods, dependent: :destroy
 
   DEFAULT_SKILLS = {
-    'こぶし' => { category: :martialarts, base_value: 50, always_available: true },
-    'キック' => { category: :martialarts, base_value: 25, always_available: true },
-    '頭突き' => { category: :martialarts, base_value: 10, always_available: true },
+    'こぶし' => { category: :attack, base_value: 50, always_available: true },
+    'キック' => { category: :attack, base_value: 25, always_available: true },
+    '頭突き' => { category: :attack, base_value: 10, always_available: true },
     '組み付き' => { category: :grapple, base_value: :dex_x2, always_available: true },
     '回避' => { category: :dodge, base_value: :dex_x2, always_available: true },
     '拳銃' => { category: :attack, base_value: 0, always_available: true },
