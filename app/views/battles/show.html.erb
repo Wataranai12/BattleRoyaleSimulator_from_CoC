@@ -1,2 +1,113 @@
-<h2>バトル結果</h2>
-<p>ここにログや結果を表示予定</p>
+<%# app/views/battles/show.html.erb %>
+<div class="container-fluid py-4">
+  <div class="row">
+    <%# 左：参加者ステータス %>
+    <div class="col-md-4">
+      <div class="card shadow-sm mb-3">
+        <div class="card-header fw-bold bg-dark text-white d-flex justify-content-between align-items-center">
+          <span>⚔️ 戦闘状況</span>
+          <span class="badge bg-danger">第<%= @battle.current_round %>ラウンド</span>
+        </div>
+        <div class="card-body p-0">
+          <% @participants.each do |p| %>
+            <div class="p-3 border-bottom <%= 'bg-light opacity-50' unless p.is_active %>">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                  <strong class="<%= p.is_active ? 'text-dark' : 'text-muted' %>">
+                    <%= p.character.name %>
+                  </strong>
+                  <% if @battle.battle_mode == 'team' %>
+                    <span class="badge bg-primary ms-1">Team <%= p.team.where_team %></span>
+                  <% end %>
+                </div>
+                <% unless p.is_active %>
+                  <span class="badge bg-secondary">戦闘不能</span>
+                <% end %>
+              </div>
+              
+              <%# HPバー %>
+              <div class="mb-2">
+                <div class="d-flex justify-content-between small text-muted">
+                  <span>HP</span>
+                  <span><%= p.current_hp %> / <%= p.character.max_hp %></span>
+                </div>
+                <% hp_percent = (p.current_hp.to_f / p.character.max_hp * 100).round %>
+                <% bar_color = hp_percent > 50 ? 'success' : hp_percent > 20 ? 'warning' : 'danger' %>
+                <div class="progress" style="height: 8px;">
+                  <div class="progress-bar bg-<%= bar_color %>"
+                       style="width: <%= [hp_percent, 0].max %>%"></div>
+                </div>
+              </div>
+              
+              <%# 技能 %>
+              <div class="small text-muted">
+                <% char = p.character %>
+                <% dex = char.characteristics.find_by(name: 'dex')&.value || 10 %>
+                <% dodge = char.skills.find_by(name: '回避')&.success || 0 %>
+                DEX: <%= dex %> / 回避: <%= dodge %>%
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      
+      <%# 操作ボタン %>
+      <% unless @battle.is_finished? %>
+        <div class="d-grid gap-2">
+          <%= button_to '次のターンを実行',
+                battle_path(@battle, action: 'execute_turn'),
+                method: :post,
+                class: 'btn btn-primary btn-lg',
+                data: { turbo: false } %>
+          
+          <%= button_to 'ラウンド終了',
+                battle_path(@battle, action: 'next_round'),
+                method: :post,
+                class: 'btn btn-outline-secondary',
+                data: { turbo: false } %>
+        </div>
+      <% else %>
+        <div class="alert alert-success text-center">
+          <h4>🎉 戦闘終了</h4>
+          <%= link_to '戦闘準備に戻る', new_battle_path, class: 'btn btn-primary mt-2' %>
+        </div>
+      <% end %>
+    </div>
+
+    <%# 右：戦闘ログ %>
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header fw-bold bg-dark text-white">
+          📜 戦闘ログ
+        </div>
+        <div class="card-body" style="height: 600px; overflow-y: auto;" id="battle-log">
+          <% @logs.reverse.each do |log| %>
+            <div class="mb-2 pb-2 border-bottom">
+              <div class="d-flex justify-content-between">
+                <span class="badge <%= log_badge_class(log.action_type) %>">
+                  <%= log.action_type %>
+                </span>
+                <span class="small text-muted">R<%= log.round %></span>
+              </div>
+              <div class="mt-1"><%= log.message %></div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ログを自動スクロール（最新が上なのでtopへ）
+  const logDiv = document.getElementById('battle-log');
+  if (logDiv) {
+    logDiv.scrollTop = 0;
+  }
+</script>
+
+<style>
+  .progress {
+    background-color: #e9ecef;
+  }
+</style>

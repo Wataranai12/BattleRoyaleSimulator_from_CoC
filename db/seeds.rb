@@ -14,6 +14,7 @@ Character.where(is_sample: true).destroy_all
 samples = [
   {
     name: '夜家 真来',
+    max_hp: 12,
     db: '+1d4',
     stats: { str: 11, con: 12, pow: 11, dex: 15, app: 10, siz: 12, int: 14, edu: 15 },
     skills: [
@@ -34,6 +35,7 @@ samples = [
   },
   {
     name: 'マーシャル 敦子',
+    max_hp: 16,
     db: '+1d4',
     stats: { str: 16, con: 15, pow: 10, dex: 8, app: 9, siz: 16, int: 9, edu: 12 },
     skills: [
@@ -63,6 +65,7 @@ samples = [
   },
   {
     name: '超毒 嘆代',
+    max_hp: 10,
     db: '0',
     stats: { str: 9, con: 9, pow: 13, dex: 18, app: 9, siz: 11, int: 16, edu: 15 },
     skills: [
@@ -85,6 +88,7 @@ samples = [
   },
   {
     name: '徳井 研樹',
+    max_hp: 13,
     db: '0',
     stats: { str: 9, con: 10, pow: 13, dex: 11, app: 14, siz: 15, int: 16, edu: 15 },
     skills: [
@@ -123,6 +127,7 @@ samples.each do |data|
     name: data[:name],
     is_sample: true, # ✅ user_id: nil ではなくフラグで管理
     damage_bonus: data[:db],
+    max_hp: data[:max_hp],
     original_txt: "Sample data: #{data[:name]}"
   )
 
