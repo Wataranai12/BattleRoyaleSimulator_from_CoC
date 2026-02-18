@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_02_17_081157) do
+ActiveRecord::Schema[7.1].define(version: 2026_02_18_060755) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -102,11 +102,12 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_17_081157) do
   create_table "conditions", force: :cascade do |t|
     t.bigint "battle_participant_id", null: false
     t.integer "origin_participant_id"
-    t.string "condition_type"
     t.integer "duration", default: 0
     t.integer "effect_value"
+    t.boolean "is_active", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "condition_type", default: 0, null: false
     t.index ["battle_participant_id"], name: "index_conditions_on_battle_participant_id"
     t.index ["origin_participant_id"], name: "index_conditions_on_origin_participant_id"
   end

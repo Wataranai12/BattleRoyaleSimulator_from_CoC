@@ -80,7 +80,7 @@ samples = [
         can_apply_db: false,
         can_apply_ma: false,
         skill_name: '投擲',
-        inflicts_condition: { condition_type: 'poisoned', duration: 1, effect_value: 10 }
+        inflicts_condition: { condition_type: 3, duration: 1, effect_value: 10 }
       }
     ]
   },
@@ -110,7 +110,7 @@ samples = [
         can_apply_db: false,
         can_apply_ma: false,
         skill_name: '組み付き',
-        inflicts_condition: { condition_type: 'grappling', duration: 1, effect_value: nil }
+        inflicts_condition: { condition_type: 0, duration: 1, effect_value: nil }
       }
     ]
   }
