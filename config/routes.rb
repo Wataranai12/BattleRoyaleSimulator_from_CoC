@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     
     member do
       post :execute_turn
-      post :next_round
+      post :end_battle
     end
   end
   resources :users, only: %i[new create]

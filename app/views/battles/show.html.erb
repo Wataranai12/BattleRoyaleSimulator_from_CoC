@@ -54,17 +54,17 @@
       <%# 操作ボタン %>
       <% unless @battle.is_finished? %>
         <div class="d-grid gap-2">
-          <%= button_to '次のターンを実行',
-                battle_path(@battle, action: 'execute_turn'),
+          <%= button_to '次のラウンドを実行',
+                execute_turn_battle_path(@battle),
                 method: :post,
                 class: 'btn btn-primary btn-lg',
                 data: { turbo: false } %>
           
-          <%= button_to 'ラウンド終了',
-                battle_path(@battle, action: 'next_round'),
+          <%= button_to '戦闘をやめる',
+                end_battle_battle_path(@battle),
                 method: :post,
-                class: 'btn btn-outline-secondary',
-                data: { turbo: false } %>
+                class: 'btn btn-outline-danger',
+                data: { turbo: false, confirm: '本当に戦闘を中断しますか？' } %>
         </div>
       <% else %>
         <div class="alert alert-success text-center">

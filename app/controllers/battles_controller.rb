@@ -118,15 +118,14 @@ class BattlesController < ApplicationController
   def execute_turn
     @battle = Battle.find(params[:id])
     simulator = BattleSimulator.new(@battle)
-    simulator.execute_auto_turn
+    simulator.execute_round
     redirect_to battle_path(@battle)
   end
   
-  def next_round
+  def end_battle
     @battle = Battle.find(params[:id])
-    simulator = BattleSimulator.new(@battle)
-    simulator.next_round
-    redirect_to battle_path(@battle)
+    @battle.update!(is_finished: true)
+    redirect_to new_battle_path, notice: '戦闘を中断しました'
   end
   
   private
