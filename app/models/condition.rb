@@ -14,5 +14,5 @@ class Condition < ApplicationRecord
     nerf: 5
   }
 
-  validates :duration, numericality: { greater_than_or_equal_to: 0 }
+  validates :duration, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 end
