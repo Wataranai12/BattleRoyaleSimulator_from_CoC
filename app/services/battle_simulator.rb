@@ -262,6 +262,34 @@ class BattleSimulator
       total += db
     end
     
+    # マーシャルアーツ判定
+    if attack_method.can_apply_ma
+      ma_skill = character.skills.find_by(name: 'マーシャルアーツ')
+      if ma_skill
+        ma_roll = rand(1..100)
+        ma_critical = ma_roll <= 5
+        ma_fumble = ma_roll >= 96
+        ma_success = ma_roll <= ma_skill.success
+        
+        if ma_critical
+          # クリティカル: ダメージ×4
+          total *= 4
+          log_event('マーシャルアーツ', "#{character.name} のマーシャルアーツ判定(#{ma_roll}) → クリティカル！ ダメージ×4", character: character)
+        elsif ma_fumble
+          # ファンブル: ダメージ半分
+          total = (total / 2.0).round
+          log_event('マーシャルアーツ', "#{character.name} のマーシャルアーツ判定(#{ma_roll}) → ファンブル！ ダメージ半分", character: character)
+        elsif ma_success
+          # 成功: ダメージ×2
+          total *= 2
+          log_event('マーシャルアーツ', "#{character.name} のマーシャルアーツ判定(#{ma_roll}) → 成功！ ダメージ×2", character: character)
+        else
+          # 失敗: 補正なし
+          log_event('マーシャルアーツ', "#{character.name} のマーシャルアーツ判定(#{ma_roll}) → 失敗、補正なし", character: character)
+        end
+      end
+    end
+    
     [total, 0].max
   end
 
