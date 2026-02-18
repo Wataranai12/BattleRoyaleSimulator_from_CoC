@@ -1,0 +1,131 @@
+<%# app/views/battles/select_character.html.erb %>
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 class="fw-bold mb-0">探索者の登録（Slot <%= @slot.to_i + 1 %>）</h2>
+        <%= link_to "← 戦闘準備に戻る",
+              new_battle_path,
+              class: "btn btn-outline-secondary btn-sm" %>
+      </div>
+
+      <ul class="nav nav-pills nav-fill mb-4 shadow-sm p-1 bg-light rounded"
+          id="charTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="paste-tab"
+                  data-bs-toggle="tab" data-bs-target="#paste"
+                  type="button" role="tab">テキスト貼り付け</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="upload-tab"
+                  data-bs-toggle="tab" data-bs-target="#upload"
+                  type="button" role="tab">ファイル選択</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="sample-tab"
+                  data-bs-toggle="tab" data-bs-target="#sample"
+                  type="button" role="tab">サンプルから選ぶ</button>
+        </li>
+        <% if @my_characters.any? %>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="mychar-tab"
+                    data-bs-toggle="tab" data-bs-target="#mychar"
+                    type="button" role="tab">自分のキャラ</button>
+          </li>
+        <% end %>
+      </ul>
+
+      <div class="tab-content border p-4 bg-white rounded shadow-sm" id="charTabContent">
+
+        <%# パターン1: テキスト貼り付け %>
+        <div class="tab-pane fade show active" id="paste" role="tabpanel">
+          <%= form_with url: characters_path, method: :post, local: true do |f| %>
+            <%= hidden_field_tag :slot, @slot %>
+            <div class="mb-3">
+              <%= label_tag :original_txt, "txtデータをここに貼り付けてください",
+                    class: "form-label fw-bold" %>
+              <%= text_area_tag "character[original_txt]", nil,
+                    rows: 10,
+                    class: "form-control",
+                    placeholder: "【探索者名】\nSTR: 12..." %>
+            </div>
+            <div class="d-grid">
+              <%= submit_tag "解析して登録", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+
+        <%# パターン2: ファイル選択 %>
+        <div class="tab-pane fade" id="upload" role="tabpanel">
+          <%= form_with url: characters_path, method: :post,
+                local: true, multipart: true do |f| %>
+            <%= hidden_field_tag :slot, @slot %>
+            <div class="mb-3">
+              <%= label_tag :file, "txtファイルを選択", class: "form-label fw-bold" %>
+              <%= file_field_tag "character[file]",
+                    class: "form-control", accept: ".txt" %>
+            </div>
+            <div class="d-grid">
+              <%= submit_tag "ファイルをアップロード", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+
+        <%# パターン3: サンプルから選ぶ %>
+        <div class="tab-pane fade" id="sample" role="tabpanel">
+          <p class="text-muted small">
+            サンプルキャラクターをそのままスロットに登録できます。
+          </p>
+          <div class="row row-cols-1 row-cols-md-2 g-3">
+            <% @sample_characters.each do |char| %>
+              <div class="col">
+                <div class="card h-100 shadow-sm border-primary-subtle">
+                  <div class="card-body">
+                    <h5 class="card-title fw-bold"><%= char.name %></h5>
+                    <p class="text-muted small mb-2">
+                      HP: <%= char.max_hp %> / DB: <%= char.damage_bonus %>
+                    </p>
+                    <%# サンプルをコピーしてスロットに登録 %>
+                    <%= button_to "このキャラを選ぶ",
+                          characters_path,
+                          method: :post,
+                          params: { sample_id: char.id, slot: @slot },
+                          class: "btn btn-primary btn-sm w-100" %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <%# パターン4: 自分のキャラから選ぶ（ログイン時のみ） %>
+        <% if @my_characters.any? %>
+          <div class="tab-pane fade" id="mychar" role="tabpanel">
+            <p class="text-muted small">
+              登録済みのキャラクターをスロットに追加できます。
+            </p>
+            <div class="row row-cols-1 row-cols-md-2 g-3">
+              <% @my_characters.each do |char| %>
+                <div class="col">
+                  <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                      <h5 class="card-title fw-bold"><%= char.name %></h5>
+                      <p class="text-muted small mb-2">
+                        HP: <%= char.max_hp %> / DB: <%= char.damage_bonus %>
+                      </p>
+                      <%= link_to "このキャラを選ぶ",
+                            new_battle_path(character_id: char.id, slot: @slot),
+                            class: "btn btn-outline-primary btn-sm w-100" %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,27 +1,80 @@
+<%# app/views/battles/new.html.erb %>
 <div class="container py-5">
-  <h2 class="text-center mb-5 fw-bold">戦闘準備</h2>
+  <h2 class="text-center mb-4 fw-bold">戦闘準備</h2>
 
+  <%# ───── 戦闘モード選択 ───── %>
+  <div class="d-flex justify-content-center mb-5">
+    <div class="btn-group" role="group">
+      <%= link_to "⚔️ 個人戦（バトルロワイヤル）",
+            new_battle_path(battle_mode: "individual"),
+            class: "btn #{@battle_mode == 'individual' ? 'btn-dark' : 'btn-outline-dark'}" %>
+      <%= link_to "🛡️ チーム戦",
+            new_battle_path(battle_mode: "team"),
+            class: "btn #{@battle_mode == 'team' ? 'btn-dark' : 'btn-outline-dark'}" %>
+    </div>
+  </div>
+
+  <%# ───── スロット一覧 ───── %>
   <div class="row row-cols-1 row-cols-md-4 g-4 mb-5">
-    <% 4.times do |i| %>
+    <% @slots.each_with_index do |slot, i| %>
       <div class="col">
-        <div class="card h-100 shadow-sm border-dashed" style="border: 2px dashed #ccc; min-height: 200px;">
+        <div class="card h-100 shadow-sm" style="border: 2px dashed #ccc; min-height: 220px;">
           <div class="card-body d-flex flex-column justify-content-between align-items-center">
-            <span class="badge bg-secondary mb-2">Slot <%= i + 1 %></span>
-            
-            <div class="text-muted small">未選択</div>
 
+            <span class="badge bg-secondary mb-2">Slot <%= i + 1 %></span>
+
+            <%# キャラクター名 %>
+            <% if slot[:character].present? %>
+              <div class="fw-bold text-center"><%= slot[:character].name %></div>
+            <% else %>
+              <div class="text-muted small">未選択</div>
+            <% end %>
+
+            <%# チームトグル（チーム戦モードのみ表示） %>
+            <% if @battle_mode == "team" && slot[:character].present? %>
+              <div class="btn-group btn-group-sm mt-2" role="group">
+                <% %w[A B C].each do |team_name| %>
+                  <%= button_to "#{team_name}",
+                        update_team_battles_path(slot: i, team: team_name),
+                        method: :patch,
+                        class: "btn #{slot[:team] == team_name ? 'btn-dark' : 'btn-outline-secondary'}" %>
+                <% end %>
+              </div>
+              <div class="small text-muted mt-1">
+                チーム: <%= slot[:team].present? ? slot[:team] : "未割当" %>
+              </div>
+            <% end %>
+
+            <%# 登録・削除ボタン %>
             <div class="d-grid gap-2 w-100 mt-3">
-              <%# ここからインポート画面へ %>
-              <%= link_to "登録", new_character_path, class: "btn btn-outline-success btn-sm" %>
-              <button class="btn btn-outline-danger btn-sm">削除</button>
+              <%= link_to "登録",
+                    select_character_battles_path(slot: i),
+                    class: "btn btn-outline-success btn-sm" %>
+              <%= button_to "削除",
+                    remove_slot_battles_path(slot: i),
+                    method: :delete,
+                    class: "btn btn-outline-danger btn-sm" %>
             </div>
+
           </div>
         </div>
       </div>
     <% end %>
   </div>
 
+  <%# ───── 戦闘開始ボタン ───── %>
+  <%# 登録済みキャラが2人以上のときだけ活性化 %>
+  <% registered_count = @slots.count { |s| s[:character].present? } %>
   <div class="text-center">
-    <%= link_to "戦闘開始！！", "#", class: "btn btn-danger btn-lg px-5 py-3 shadow fw-bold" %>
+    <% if registered_count >= 2 %>
+      <%= link_to "戦闘開始！！",
+            battles_path,
+            class: "btn btn-danger btn-lg px-5 py-3 shadow fw-bold",
+            data: { turbo_method: :post } %>
+    <% else %>
+      <button class="btn btn-secondary btn-lg px-5 py-3 shadow fw-bold" disabled>
+        戦闘開始！！（あと <%= 2 - registered_count %>人必要）
+      </button>
+    <% end %>
   </div>
 </div>

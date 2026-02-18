@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DefaultCondition < ApplicationRecord
   belongs_to :attack_method
 

@@ -44,24 +44,20 @@
         <div class="tab-pane fade" id="sample" role="tabpanel">
           <p class="text-muted small">公式サンプルやプリセットキャラを使用して、すぐにバトルを開始できます。</p>
           <div class="row row-cols-1 row-cols-md-2 g-3">
-          <% @sample_characters.each do |char| %>
-            <div class="col">
-              <div class="card h-100 shadow-sm border-primary-subtle">
-                <div class="card-body">
-                  <h5 class="card-title fw-bold"><%= char.name %></h5>
-                  <%# ... ステータス表示 ... %>
-                  
-                  <%= button_to "このキャラを登録", characters_path, 
-                      method: :post,
-                      params: { sample_id: char.id }, 
-                      class: "btn btn-sm btn-primary w-100" %>
+            <% @sample_characters.each do |char| %>
+              <div class="col">
+                <div class="card h-100 shadow-sm border-primary-subtle">
+                  <div class="card-body">
+                    <h5 class="card-title fw-bold"><%= char.name %></h5>
+                    <%= link_to "このキャラを選ぶ",
+                                new_battle_path(character_id: char.id, slot: @slot),
+                                class: "btn btn-primary" %>
+                  </div>
                 </div>
               </div>
-            </div>
-          <% end %>
+            <% end %>
           </div>
         </div>
-
       </div>
     </div>
   </div>

@@ -159,11 +159,11 @@ samples.each do |data|
     next unless condition_data
 
     attack_method.create_default_condition!(condition_data)
-     DefaultCondition.create!(
-       attack_method: attack_method,
-       condition_type: condition_data[:condition_type],
-       duration:       condition_data[:duration],
-       effect_value:   condition_data[:effect_value]
-     )
+    DefaultCondition.create!(
+      attack_method: attack_method,
+      condition_type: condition_data[:condition_type],
+      duration: condition_data[:duration],
+      effect_value: condition_data[:effect_value]
+    )
   end
 end

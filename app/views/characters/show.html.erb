@@ -1,2 +1,150 @@
-<h1>Characters#show</h1>
-<p>Find me in app/views/characters/show.html.erb</p>
+<%# app/views/characters/show.html.erb %>
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-9">
+
+      <%# ヘッダー %>
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 class="fw-bold mb-0">📋 探索者カード確認</h2>
+        <%= link_to "← 戦闘準備に戻る",
+              new_battle_path,
+              class: "btn btn-outline-secondary btn-sm" %>
+      </div>
+
+      <%= form_with model: @character, local: true do |f| %>
+
+        <%# ───── 基本情報 ───── %>
+        <div class="card shadow-sm mb-4">
+          <div class="card-header fw-bold bg-dark text-white">基本情報</div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <%= f.label :name, "名前", class: "form-label fw-bold" %>
+                <%= f.text_field :name, class: "form-control" %>
+              </div>
+              <div class="col-md-4">
+                <%= f.label :max_hp, "最大HP", class: "form-label fw-bold" %>
+                <%= f.number_field :max_hp, class: "form-control" %>
+              </div>
+              <div class="col-md-4">
+                <%= f.label :damage_bonus, "ダメージボーナス", class: "form-label fw-bold" %>
+                <%= f.text_field :damage_bonus, class: "form-control" %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <%# ───── 能力値 ───── %>
+        <div class="card shadow-sm mb-4">
+          <div class="card-header fw-bold bg-dark text-white">能力値</div>
+          <div class="card-body">
+            <div class="row g-3">
+              <%= f.fields_for :characteristics do |cf| %>
+                <div class="col-6 col-md-3">
+                  <%= cf.label :value, cf.object.name.upcase, class: "form-label fw-bold text-muted small" %>
+                  <div class="input-group">
+                    <%= cf.hidden_field :name %>
+                    <%= cf.number_field :value, class: "form-control text-center", min: 1, max: 99 %>
+                    <span class="input-group-text text-muted small">
+                      <%= cf.object.value * 5 %>%
+                    </span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <%# ───── 技能一覧 ───── %>
+        <div class="card shadow-sm mb-4">
+          <div class="card-header fw-bold bg-dark text-white">技能</div>
+          <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>技能名</th>
+                  <th>成功率</th>
+                  <th>カテゴリ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <%= f.fields_for :skills do |sf| %>
+                  <tr>
+                    <td>
+                      <%= sf.hidden_field :category %>
+                      <%= sf.text_field :name, class: "form-control form-control-sm border-0 bg-transparent" %>
+                    </td>
+                    <td>
+                      <div class="input-group input-group-sm" style="width: 100px;">
+                        <%= sf.number_field :success, class: "form-control form-control-sm", min: 1, max: 100 %>
+                        <span class="input-group-text">%</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge <%= category_badge_class(sf.object.category) %>">
+                        <%= sf.object.category %>
+                      </span>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <%# ───── 攻撃手段 ───── %>
+        <div class="card shadow-sm mb-4">
+          <div class="card-header fw-bold bg-dark text-white">攻撃手段</div>
+          <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>表示名</th>
+                  <th>ダメージ</th>
+                  <th>DB</th>
+                  <th>MA</th>
+                </tr>
+              </thead>
+              <tbody>
+                <%= f.fields_for :attack_methods do |af| %>
+                  <tr>
+                    <td>
+                      <%= af.text_field :show_name, class: "form-control form-control-sm border-0 bg-transparent" %>
+                    </td>
+                    <td>
+                      <%= af.text_field :base_damage, class: "form-control form-control-sm", style: "width: 80px;" %>
+                    </td>
+                    <td class="text-center">
+                      <%= af.check_box :can_apply_db, class: "form-check-input" %>
+                    </td>
+                    <td class="text-center">
+                      <%= af.check_box :can_apply_ma, class: "form-check-input" %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <%# ───── ボタン類 ───── %>
+        <div class="d-flex gap-3 justify-content-end">
+          <%= f.submit "変更を保存",
+                class: "btn btn-primary px-4" %>
+
+          <% if session[:pending_slot].present? %>
+            <%= link_to "このキャラで戦闘準備へ",
+                  new_battle_path(character_id: @character.id, slot: session[:pending_slot]),
+                  class: "btn btn-danger px-4 fw-bold" %>
+          <% else %>
+            <%= link_to "戦闘準備に戻る",
+                  new_battle_path,
+                  class: "btn btn-outline-secondary px-4" %>
+          <% end %>
+        </div>
+
+      <% end %>
+
+    </div>
+  </div>
+</div>
