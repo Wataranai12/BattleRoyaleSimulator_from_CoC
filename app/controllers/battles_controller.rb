@@ -94,6 +94,22 @@ class BattlesController < ApplicationController
       # max_hp がない場合は HP 特性値から取得、それもなければ 10
       max_hp = char.max_hp || char.characteristics.find_by(name: 'hp')&.value || 10
       
+      # 攻撃手段がない場合はデフォルトを作成
+      if char.attack_methods.empty?
+        punch_skill = char.skills.find_by(name: 'こぶし') || 
+                      char.skills.find_by(name: 'こぶしパンチ') ||
+                      char.skills.create!(name: 'こぶし', category: :combat, success: 50)
+        
+        char.attack_methods.create!(
+          skill: punch_skill,
+          show_name: 'こぶし',
+          weapon_name: 'こぶし',
+          base_damage: '1d3',
+          can_apply_db: true,
+          can_apply_ma: false
+        )
+      end
+      
       @battle.battle_participants.create!(
         character: char,
         team: @battle.battle_mode == 'team' ? teams[slot['team']] : nil,
@@ -126,6 +142,50 @@ class BattlesController < ApplicationController
     @battle = Battle.find(params[:id])
     @battle.update!(is_finished: true)
     redirect_to new_battle_path, notice: '戦闘を中断しました'
+  end
+  
+  def export_log
+    @battle = Battle.find(params[:id])
+    @logs = @battle.battle_logs.order(round: :asc, created_at: :asc)
+    @participants = @battle.battle_participants.includes(:character)
+    
+    # テキスト形式で出力
+    text = "=" * 60 + "\n"
+    text += "戦闘ログ - Battle ##{@battle.id}\n"
+    text += "=" * 60 + "\n"
+    text += "戦闘モード: #{@battle.battle_mode == 'individual' ? '個人戦' : 'チーム戦'}\n"
+    text += "総ラウンド数: #{@battle.current_round}\n"
+    text += "終了: #{@battle.is_finished? ? 'はい' : 'いいえ'}\n"
+    text += "\n"
+    
+    text += "参加者:\n"
+    @participants.each do |p|
+      text += "  - #{p.character.name} (HP: #{p.current_hp}/#{p.character.max_hp})"
+      text += p.is_active ? " [生存]" : " [戦闘不能]"
+      text += "\n"
+    end
+    text += "\n"
+    
+    text += "=" * 60 + "\n"
+    text += "戦闘ログ詳細\n"
+    text += "=" * 60 + "\n\n"
+    
+    current_round = nil
+    @logs.each do |log|
+      if current_round != log.round
+        current_round = log.round
+        text += "\n" + "-" * 60 + "\n"
+        text += "第#{log.round}ラウンド\n"
+        text += "-" * 60 + "\n"
+      end
+      
+      text += "[#{log.action_type}] #{log.message}\n"
+    end
+    
+    send_data text,
+      filename: "battle_#{@battle.id}_log_#{Time.current.strftime('%Y%m%d_%H%M%S')}.txt",
+      type: 'text/plain; charset=utf-8',
+      disposition: 'attachment'
   end
   
   private

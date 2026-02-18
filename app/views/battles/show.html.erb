@@ -69,7 +69,14 @@
       <% else %>
         <div class="alert alert-success text-center">
           <h4>🎉 戦闘終了</h4>
-          <%= link_to '戦闘準備に戻る', new_battle_path, class: 'btn btn-primary mt-2' %>
+          <div class="d-grid gap-2 mt-3">
+            <%= button_to '戦闘ログをダウンロード',
+                  export_log_battle_path(@battle),
+                  method: :get,
+                  class: 'btn btn-primary',
+                  data: { turbo: false } %>
+            <%= link_to '戦闘準備に戻る', new_battle_path, class: 'btn btn-outline-secondary' %>
+          </div>
         </div>
       <% end %>
     </div>

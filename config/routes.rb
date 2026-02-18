@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     member do
       post :execute_turn
       post :end_battle
+      get  :export_log
     end
   end
   resources :users, only: %i[new create]
