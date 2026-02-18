@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-#V3
+
+# V3
 class CharactersController < ApplicationController
   before_action :require_login
   before_action :set_character, only: %i[show update]
@@ -11,8 +12,8 @@ class CharactersController < ApplicationController
 
   def show
     @character = Character
-      .includes(:characteristics, :skills, :attack_methods)
-      .find(params[:id])
+                 .includes(:characteristics, :skills, :attack_methods)
+                 .find(params[:id])
   end
 
   def create
@@ -42,7 +43,7 @@ class CharactersController < ApplicationController
       sample.attack_methods.each do |am|
         new_skill = skill_map[am.skill_id]
         next unless new_skill
-        
+
         @character.attack_methods.build(
           skill: new_skill,
           show_name: am.show_name,
@@ -76,6 +77,7 @@ class CharactersController < ApplicationController
       parsed_data[:characteristics].each do |name, value|
         next if value.nil? || value.zero?
         next if skip_as_characteristic.include?(name)
+
         @character.characteristics.build(
           name: name.to_s.downcase,
           value: value
@@ -85,6 +87,7 @@ class CharactersController < ApplicationController
       # 技能を登録
       parsed_data[:skills].each do |skill_data|
         next if skill_data[:success].nil? || skill_data[:success] <= 0
+
         @character.skills.build(
           name: skill_data[:name],
           category: skill_data[:category] || :other,
@@ -129,9 +132,9 @@ class CharactersController < ApplicationController
         session[:battle_slots] ||= Array.new(4) { { 'character_id' => nil, 'team' => nil } }
         session[:battle_slots][slot] = { 'character_id' => @character.id, 'team' => nil }
         redirect_to new_battle_path,
-          notice: "#{@character.name} をスロット#{slot + 1}に登録しました"
+                    notice: "#{@character.name} をスロット#{slot + 1}に登録しました"
       else
-        redirect_to character_path(@character), notice: "変更を保存しました"
+        redirect_to character_path(@character), notice: '変更を保存しました'
       end
     else
       render :show, status: :unprocessable_entity
@@ -150,8 +153,8 @@ class CharactersController < ApplicationController
       :max_hp,
       :damage_bonus,
       characteristics_attributes: %i[id name value],
-      skills_attributes:          %i[id name success category],
-      attack_methods_attributes:  %i[id show_name weapon_name base_damage can_apply_db can_apply_ma]
+      skills_attributes: %i[id name success category],
+      attack_methods_attributes: %i[id show_name weapon_name base_damage can_apply_db can_apply_ma]
     )
   end
 end

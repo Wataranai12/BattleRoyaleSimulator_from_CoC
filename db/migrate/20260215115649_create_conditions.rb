@@ -9,7 +9,7 @@ class CreateConditions < ActiveRecord::Migration[7.1]
       t.integer :condition_type, null: true
       t.integer :duration, default: 0
       t.integer :effect_value
-      t.boolean :is_active, default:0, null: false
+      t.boolean :is_active, default: 0, null: false
 
       t.timestamps
     end

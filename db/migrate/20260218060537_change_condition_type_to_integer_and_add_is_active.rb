@@ -1,16 +1,18 @@
+# frozen_string_literal: true
+
 class ChangeConditionTypeToIntegerAndAddIsActive < ActiveRecord::Migration[7.1]
   def up
     # 既存の Condition データを削除（型変換のため）
-    execute "DELETE FROM conditions"
-    
+    execute 'DELETE FROM conditions'
+
     # condition_type を string から integer に変更
     remove_column :conditions, :condition_type
     add_column :conditions, :condition_type, :integer, default: 0, null: false
-    
+
     # is_active カラムがすでに存在する場合はスキップ
-    unless column_exists?(:conditions, :is_active)
-      add_column :conditions, :is_active, :boolean, default: true, null: false
-    end
+    return if column_exists?(:conditions, :is_active)
+
+    add_column :conditions, :is_active, :boolean, default: true, null: false
   end
 
   def down

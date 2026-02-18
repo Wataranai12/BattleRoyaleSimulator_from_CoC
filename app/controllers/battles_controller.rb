@@ -14,9 +14,9 @@ class BattlesController < ApplicationController
       slot_index = params[:slot].to_i
       session[:battle_slots][slot_index] = {
         'character_id' => params[:character_id].to_i,
-        'team'         => params[:team] || session[:battle_slots][slot_index]&.dig('team')
+        'team' => params[:team] || session[:battle_slots][slot_index]&.dig('team')
       }
-      session.delete(:pending_slot)  # ✅ 確認済みなのでクリア
+      session.delete(:pending_slot) # ✅ 確認済みなのでクリア
     end
 
     # モード切替
@@ -27,7 +27,7 @@ class BattlesController < ApplicationController
       slot = session[:battle_slots][i] || { 'character_id' => nil, 'team' => nil }
       {
         character: Character.find_by(id: slot['character_id'] || slot[:character_id]),
-        team:      slot['team'] || slot[:team]
+        team: slot['team'] || slot[:team]
       }
     end
 
@@ -47,7 +47,7 @@ class BattlesController < ApplicationController
     slot = session[:battle_slots][slot_index] || {}
     session[:battle_slots][slot_index] = {
       'character_id' => slot['character_id'] || slot[:character_id],
-      'team'         => params[:team]
+      'team' => params[:team]
     }
     redirect_to new_battle_path
   end
@@ -62,17 +62,15 @@ class BattlesController < ApplicationController
     # 戦闘開始：セッションからDBへ保存
     slots = session[:battle_slots] || []
     characters = slots.map { |s| Character.find_by(id: s['character_id']) }.compact
-    
-    if characters.size < 2
-      redirect_to new_battle_path, alert: '参加者が2人以上必要です' and return
-    end
-    
+
+    redirect_to new_battle_path, alert: '参加者が2人以上必要です' and return if characters.size < 2
+
     @battle = Battle.create!(
       battle_mode: session[:battle_mode] || 'individual',
       current_round: 0,
       is_finished: false
     )
-    
+
     # チーム戦の場合はTeam作成
     if @battle.battle_mode == 'team'
       teams_data = slots.map { |s| s['team'] }.compact.uniq
@@ -85,21 +83,22 @@ class BattlesController < ApplicationController
         )
       end
     end
-    
+
     # BattleParticipant作成
-    slots.each_with_index do |slot, index|
+    slots.each_with_index do |slot, _index|
       next unless slot['character_id']
+
       char = Character.find(slot['character_id'])
-      
+
       # max_hp がない場合は HP 特性値から取得、それもなければ 10
       max_hp = char.max_hp || char.characteristics.find_by(name: 'hp')&.value || 10
-      
+
       # 攻撃手段がない場合はデフォルトを作成
       if char.attack_methods.empty?
-        punch_skill = char.skills.find_by(name: 'こぶし') || 
+        punch_skill = char.skills.find_by(name: 'こぶし') ||
                       char.skills.find_by(name: 'こぶしパンチ') ||
-                      char.skills.create!(name: 'こぶし', category: :combat, success: 50)
-        
+                      char.skills.create!(name: 'こぶし', category: :attack, success: 50)
+
         char.attack_methods.create!(
           skill: punch_skill,
           show_name: 'こぶし',
@@ -109,7 +108,7 @@ class BattlesController < ApplicationController
           can_apply_ma: false
         )
       end
-      
+
       @battle.battle_participants.create!(
         character: char,
         team: @battle.battle_mode == 'team' ? teams[slot['team']] : nil,
@@ -117,79 +116,79 @@ class BattlesController < ApplicationController
         is_active: true
       )
     end
-    
+
     # シミュレーター初期化
     simulator = BattleSimulator.new(@battle)
     simulator.start_battle
-    
+
     redirect_to battle_path(@battle)
   end
 
   def show
-    @battle = Battle.includes(battle_participants: { character: [:characteristics, :skills] }).find(params[:id])
+    @battle = Battle.includes(battle_participants: { character: %i[characteristics skills] }).find(params[:id])
     @participants = @battle.battle_participants.order('id ASC')
     @logs = @battle.battle_logs.order(created_at: :desc).limit(100)
   end
-  
+
   def execute_turn
     @battle = Battle.find(params[:id])
     simulator = BattleSimulator.new(@battle)
     simulator.execute_round
     redirect_to battle_path(@battle)
   end
-  
+
   def end_battle
     @battle = Battle.find(params[:id])
     @battle.update!(is_finished: true)
     redirect_to new_battle_path, notice: '戦闘を中断しました'
   end
-  
+
   def export_log
     @battle = Battle.find(params[:id])
     @logs = @battle.battle_logs.order(round: :asc, created_at: :asc)
     @participants = @battle.battle_participants.includes(:character)
-    
+
     # テキスト形式で出力
-    text = "=" * 60 + "\n"
+    text = "#{'=' * 60}\n"
     text += "戦闘ログ - Battle ##{@battle.id}\n"
-    text += "=" * 60 + "\n"
+    text += "#{'=' * 60}\n"
     text += "戦闘モード: #{@battle.battle_mode == 'individual' ? '個人戦' : 'チーム戦'}\n"
     text += "総ラウンド数: #{@battle.current_round}\n"
     text += "終了: #{@battle.is_finished? ? 'はい' : 'いいえ'}\n"
     text += "\n"
-    
+
     text += "参加者:\n"
     @participants.each do |p|
       text += "  - #{p.character.name} (HP: #{p.current_hp}/#{p.character.max_hp})"
-      text += p.is_active ? " [生存]" : " [戦闘不能]"
+      text += p.is_active ? ' [生存]' : ' [戦闘不能]'
       text += "\n"
     end
     text += "\n"
-    
-    text += "=" * 60 + "\n"
+
+    text += "#{'=' * 60}\n"
     text += "戦闘ログ詳細\n"
-    text += "=" * 60 + "\n\n"
-    
+    text += "#{'=' * 60}\n\n"
+
     current_round = nil
     @logs.each do |log|
       if current_round != log.round
         current_round = log.round
-        text += "\n" + "-" * 60 + "\n"
+        text += "\n#{'-' * 60}\n"
         text += "第#{log.round}ラウンド\n"
-        text += "-" * 60 + "\n"
+        text += "#{'-' * 60}\n"
       end
-      
+
       text += "[#{log.action_type}] #{log.message}\n"
     end
-    
+
     send_data text,
-      filename: "battle_#{@battle.id}_log_#{Time.current.strftime('%Y%m%d_%H%M%S')}.txt",
-      type: 'text/plain; charset=utf-8',
-      disposition: 'attachment'
+              filename: "battle_#{@battle.id}_log_#{Time.current.strftime('%Y%m%d_%H%M%S')}.txt",
+              type: 'text/plain; charset=utf-8',
+              disposition: 'attachment'
   end
-  
+
   private
-  
+
   def team_color(team_name)
     colors = { 'A' => '#dc3545', 'B' => '#0d6efd', 'C' => '#198754' }
     colors[team_name] || '#6c757d'
