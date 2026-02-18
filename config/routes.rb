@@ -5,9 +5,14 @@ Rails.application.routes.draw do
   resources :characters
   resources :battles do
     collection do
-      get :select_character
+      get    :select_character
       delete :remove_slot
       patch  :update_team
+    end
+    
+    member do
+      post :execute_turn
+      post :end_battle
     end
   end
   resources :users, only: %i[new create]

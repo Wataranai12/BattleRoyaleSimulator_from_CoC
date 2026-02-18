@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+#V3
 class CharactersController < ApplicationController
   before_action :require_login
   before_action :set_character, only: %i[show update]
@@ -31,8 +31,26 @@ class CharactersController < ApplicationController
         @character.characteristics.build(name: c.name, value: c.value)
       end
 
+      # スキル名→スキルオブジェクトのマップを作成
+      skill_map = {}
       sample.skills.each do |s|
-        @character.skills.build(name: s.name, category: s.category, success: s.success)
+        new_skill = @character.skills.build(name: s.name, category: s.category, success: s.success)
+        skill_map[s.id] = new_skill
+      end
+
+      # 攻撃手段もコピー（スキルとの関連を維持）
+      sample.attack_methods.each do |am|
+        new_skill = skill_map[am.skill_id]
+        next unless new_skill
+        
+        @character.attack_methods.build(
+          skill: new_skill,
+          show_name: am.show_name,
+          weapon_name: am.weapon_name,
+          base_damage: am.base_damage,
+          can_apply_db: am.can_apply_db,
+          can_apply_ma: am.can_apply_ma
+        )
       end
 
       notice_msg = "サンプル「#{sample.name}」をあなたのリストに登録しました。"

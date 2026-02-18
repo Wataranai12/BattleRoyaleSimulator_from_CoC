@@ -67,10 +67,11 @@
   <% registered_count = @slots.count { |s| s[:character].present? } %>
   <div class="text-center">
     <% if registered_count >= 2 %>
-      <%= link_to "戦闘開始！！",
+      <%= button_to "戦闘開始！！",
             battles_path,
+            method: :post,
             class: "btn btn-danger btn-lg px-5 py-3 shadow fw-bold",
-            data: { turbo_method: :post } %>
+            data: { turbo: false } %>
     <% else %>
       <button class="btn btn-secondary btn-lg px-5 py-3 shadow fw-bold" disabled>
         戦闘開始！！（あと <%= 2 - registered_count %>人必要）
