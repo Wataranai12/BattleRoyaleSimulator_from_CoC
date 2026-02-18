@@ -5,7 +5,7 @@
   <%# ───── 戦闘モード選択 ───── %>
   <div class="d-flex justify-content-center mb-5">
     <div class="btn-group" role="group">
-      <%= link_to "⚔️ 個人戦（バトルロワイヤル）",
+      <%= link_to "⚔️ 個人戦",
             new_battle_path(battle_mode: "individual"),
             class: "btn #{@battle_mode == 'individual' ? 'btn-dark' : 'btn-outline-dark'}" %>
       <%= link_to "🛡️ チーム戦",
