@@ -13,6 +13,23 @@
   <body>
     <%= render 'shared/header' %>
     <main style="max-width: 800px; margin: 0 auto; padding: 0 10px;">
+      <div class="container mt-3">
+        <% flash.each do |type, message| %>
+          <%
+            alert_class = case type.to_sym
+                          when :notice  then "alert-success"
+                          when :alert   then "alert-danger"
+                          when :warning then "alert-warning"
+                          when :info    then "alert-info"
+                          else               "alert-secondary"
+                          end
+          %>
+          <div class="alert <%= alert_class %> alert-dismissible fade show" role="alert">
+            <%= message %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        <% end %>
+      </div>
       <%= yield %>
     </main>
     <%= render 'shared/footer' %>
