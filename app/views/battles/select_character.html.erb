@@ -71,6 +71,25 @@
             </div>
           <% end %>
         </div>
+        <%# ファイルがない場合にクラッシュ防止 %>
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            const fileInput = document.getElementById('file-input');
+            const uploadBtn = document.getElementById('upload-btn');
+
+            uploadBtn.closest('form').addEventListener('submit', function (e) {
+              if (!fileInput.value) {
+                e.preventDefault();
+                fileInput.classList.add('is-invalid');
+                fileInput.focus();
+              }
+            });
+
+            fileInput.addEventListener('change', function () {
+              fileInput.classList.remove('is-invalid');
+            });
+          });
+        </script>
 
         <%# パターン3: サンプルから選ぶ %>
         <div class="tab-pane fade" id="sample" role="tabpanel">

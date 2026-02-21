@@ -58,8 +58,24 @@ class CharactersController < ApplicationController
 
     else
       # --- パターン1 & 2: テキスト解析 ---
+      # params[:character] が nil の場合（ファイル未選択で送信など）を防ぐ
+      if params[:character].nil?
+        flash[:alert] = "入力内容が空です。テキストを貼り付けるかファイルを選択してください。"
+        return redirect_to new_character_path
+      end
+
       txt = params[:character][:original_txt].presence
-      txt = params[:character][:file].read.force_encoding('UTF-8') if params[:character][:file].present?
+
+      # ファイルが添付されている場合のみ読み込む
+      if params[:character][:file].present? && params[:character][:file].respond_to?(:read)
+        txt = params[:character][:file].read.force_encoding('UTF-8')
+      end
+
+      # txt が空の場合のガード
+      if txt.blank?
+        flash[:alert] = "テキストまたはファイルを入力してください。"
+        return redirect_to new_character_path
+      end
 
       parser = CharacterParser.new(txt)
       parsed_data = parser.parse
